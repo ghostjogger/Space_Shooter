@@ -14,6 +14,7 @@
         <e p="Scripts" t="Include">
           <e p="Asteroid.cs" t="Include" />
           <e p="Enemy.cs" t="Include" />
+          <e p="EnemyLaser.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
           <e p="Laser.cs" t="Include" />
           <e p="Main_Menu" t="Include">

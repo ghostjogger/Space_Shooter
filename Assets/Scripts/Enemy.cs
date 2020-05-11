@@ -8,11 +8,12 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 4f;
-
+    [SerializeField] private float _fireRate = 3.0f;
+    private float _canFire = -1f;
     private Player _player;
     private Animator _anim;
     private BoxCollider2D _collider;
-    
+    [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private AudioClip _explosionSound; 
     private AudioSource _audioSource;
     void Start()
@@ -44,16 +45,27 @@ public class Enemy : MonoBehaviour
         {
             _audioSource.clip = _explosionSound;
         }
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        calculateMovement();
+        if (Time.time > _canFire)
+        {
+            _fireRate = Random.Range(3.0f, 7.0f);
+            _canFire = Time.time + _fireRate;
+            fireLaser();
+        }
+    }
+
+    private void calculateMovement()
+    {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if (transform.position.y < -6.5)
         {
             Destroy(this.gameObject);
-            //transform.position = new Vector3(Random.Range(-9.5f,9.5f),6.5f,0);
         }
     }
 
@@ -85,4 +97,16 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject, 2.37f);
         }
     }
+
+    private void fireLaser()
+    {
+        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+        
+        for (int i = 0; i < lasers.Length; i++)
+        {
+            lasers[i].AssignEnemyLaser();
+        }
+    }
+
 }
